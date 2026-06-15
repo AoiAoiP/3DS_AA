@@ -1,5 +1,7 @@
 # 3DS 抗锯齿插件
 
+[![en](https://img.shields.io/badge/lang-English-blue.svg)](README.md)
+
 一款 **Luma3DS 运行时插件**，通过后期处理 FXAA（快速近似抗锯齿）对新大三上屏进行实时抗锯齿处理，有效降低 400×240 低分辨率渲染产生的几何边缘锯齿。
 
 ## 功能特性

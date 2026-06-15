@@ -1,5 +1,7 @@
 # 3DS Anti-Aliasing Plugin
 
+[![zh-CN](https://img.shields.io/badge/lang-简体中文-red.svg)](README_cn.md)
+
 **Luma3DS runtime plugin** that applies post-process FXAA (Fast Approximate Anti-Aliasing) to the top screen of New 3DS XL, reducing geometric aliasing caused by the 400×240 low-resolution display.
 
 ## Features
