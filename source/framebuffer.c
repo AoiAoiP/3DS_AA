@@ -100,7 +100,7 @@ u16* framebuffer_capture(void)
     memcpy(g_back_buffer, g_front_buffer, g_back_buffer_size);
 
     /* ARM data synchronization barrier — ensure copy is visible */
-    __asm__ volatile ("dmb sy" ::: "memory");
+    __asm__ volatile ("mcr p15, 0, %0, c7, c10, 4" :: "r"(0) : "memory");
 
     g_aa_ctx.back_buffer_ready = true;
 
@@ -128,7 +128,7 @@ void framebuffer_kill_red(u16* buf, uint32_t count)
     }
 
     /* Ensure all writes are visible before VBlank swap */
-    __asm__ volatile ("dmb sy" ::: "memory");
+    __asm__ volatile ("mcr p15, 0, %0, c7, c10, 4" :: "r"(0) : "memory");
 }
 
 bool framebuffer_swap(u16* src)
@@ -146,7 +146,7 @@ bool framebuffer_swap(u16* src)
     /* Copy processed frame to front buffer */
     memcpy(g_front_buffer, src, g_back_buffer_size);
 
-    __asm__ volatile ("dmb sy" ::: "memory");
+    __asm__ volatile ("mcr p15, 0, %0, c7, c10, 4" :: "r"(0) : "memory");
 
     return true;
 }

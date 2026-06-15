@@ -17,10 +17,11 @@
 
 | Metric | Target | Status |
 |--------|--------|--------|
-| Frame time | ≤ 2.5ms (avg) | 🚧 |
-| Frame rate impact | ≤ 10% | 🚧 |
+| Frame time | ≤ 2.5ms (avg) | 🚧 Awaiting hardware testing |
+| Frame rate impact | ≤ 10% | 🚧 Awaiting hardware testing |
 | Memory overhead | ≤ 2MB system RAM | ✅ (~375KB) |
 | Input lag | ≤ 1 frame | ✅ (double-buffered) |
+| Compilation | Clean build | ✅ |
 
 ## Requirements
 
@@ -28,22 +29,24 @@
 - **New 3DS XL** (recommended: 804MHz CPU + 2MB L2 cache)
 - Old 3DS works but AA will auto-disable below 800MHz
 
-### Software
+### Software (on 3DS)
 - **Luma3DS v13.1+** (with plugin loader support)
-- **devkitARM r52+** (for building)
 
-### Build Dependencies
-- [devkitPro](https://devkitpro.org/) with `3ds-dev` package
-- `libctru` ≥ v2.4.0
+### Build Environment
+- **Docker Desktop** (Windows / macOS / Linux)
+- **devkitPro Docker image**: `devkitpro/devkitarm`
 
 ## Building
 
 ```bash
-# In devkitPro MSYS2 shell:
-cd 3ds_aa
-make clean
-make
+# Clean build
+MSYS_NO_PATHCONV=1 docker run --rm -v "$(pwd)":/app -w /app devkitpro/devkitarm make clean
+
+# Build
+MSYS_NO_PATHCONV=1 docker run --rm -v "$(pwd)":/app -w /app devkitpro/devkitarm make
 ```
+
+> **Note for Git Bash users:** The `MSYS_NO_PATHCONV=1` prefix is required to prevent Git Bash from mangling Docker volume paths. On Linux/macOS or PowerShell, omit it.
 
 Outputs:
 - `3ds_aa.3dsx` — Homebrew Launcher format (for development/testing)
@@ -53,20 +56,24 @@ Outputs:
 
 ### As a Luma3DS Plugin
 ```bash
-# Copy to SD card (replace <title_id> with the game's title ID):
+# Rename and copy to SD card (replace <title_id> with the game's title ID):
 cp 3ds_aa.3dsx /luma/plugins/<title_id>/code.ips
 ```
+The plugin will auto-load when the game starts.
 
 ### For Development / Testing
 ```bash
-# Deploy wirelessly via 3dslink:
-make run
+# Copy to SD card for Homebrew Launcher:
+cp 3ds_aa.3dsx /3ds/
+
+# Or deploy wirelessly via 3dslink (3DS must be in hbmenu network receive mode):
+3dslink 3ds_aa.3dsx -a <3DS_IP_ADDRESS>
 ```
 
 ## Project Structure
 
 ```
-3ds_aa/
+3DS_AA/
 ├── source/
 │   ├── main.c           # Plugin entry point, frame hook, hotkeys
 │   ├── framebuffer.c    # Screen capture & RGB565 manipulation
@@ -79,10 +86,10 @@ make run
 │   ├── edge_detect.h    # Edge detection API
 │   ├── anti_aliasing.h  # FXAA API
 │   └── timing.h         # Timing & performance API
-├── build/               # Compilation output
-├── Makefile             # devkitPro build system
+├── Makefile             # devkitPro build system (Docker-based)
+├── README.md
 ├── Roadmap.md           # Full development plan
-└── README.md
+└── Install_instruction.md
 ```
 
 ## Hotkeys
@@ -116,13 +123,13 @@ make run
 
 ## Status
 
-🚧 **Alpha** — Under active development per the [Roadmap](Roadmap.md).
+🚧 **Alpha** — Compilation verified, awaiting hardware testing.
 
-- [ ] Stage 0: Environment verification (build & deploy helloworld)
-- [ ] Stage 1: Framebuffer capture & color channel manipulation
-- [ ] Stage 2: FXAA algorithm port & optimization
-- [ ] Stage 3: Double buffering & performance tuning
-- [ ] Stage 4: Hotkey control & compatibility testing
+- [x] Stage 0: Environment verification (Docker-based build compiles cleanly)
+- [ ] Stage 1: Framebuffer capture & color channel manipulation (needs 3DS hardware)
+- [ ] Stage 2: FXAA algorithm port & optimization (code complete, needs profiling)
+- [ ] Stage 3: Double buffering & performance tuning (code complete, needs profiling)
+- [ ] Stage 4: Hotkey control & compatibility testing (code complete, needs hardware)
 
 ## License
 

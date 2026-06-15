@@ -19,6 +19,8 @@
  *         /luma/plugins/<title_id>/
  */
 
+#include <stdio.h>
+
 #include "aa_plugin.h"
 #include "framebuffer.h"
 #include "edge_detect.h"
@@ -123,11 +125,11 @@ static void aa_apt_hook(APT_HookType hook, void* param)
     (void)param;
 
     switch (hook) {
-        case APT_HOOK_ON_SUSPEND:
+        case APTHOOK_ONSUSPEND:
             /* Game suspended — disable AA to save power */
             break;
 
-        case APT_HOOK_ON_RESTORE:
+        case APTHOOK_ONRESTORE:
             /* Game resumed — re-enable AA if it was on */
             if (g_aa_ctx.state == AA_STATE_THROTTLED) {
                 g_aa_ctx.state = AA_STATE_ENABLED;
@@ -357,7 +359,8 @@ void plugin_main(void)
     }
 
     /* Register APT hook for suspend/resume events */
-    aptHook(&aa_apt_hook, NULL);
+    static aptHookCookie apt_cookie;
+    aptHook(&apt_cookie, &aa_apt_hook, NULL);
 
     /*
      * Main processing loop.

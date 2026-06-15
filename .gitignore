@@ -8,6 +8,11 @@
 *.so
 *.dll
 *.dylib
+*.d
+*.3dsx
+*.elf
+*.lst
+*.map
 build/
 
 # IDE

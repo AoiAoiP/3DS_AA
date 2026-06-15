@@ -7,6 +7,8 @@
  * and current CPU frequency for performance budget enforcement.
  */
 
+#include <stdio.h>
+
 #include "timing.h"
 
 /*---------------------------------------------------------------------------
@@ -95,7 +97,7 @@ void timing_init(void)
     /* Enable the cycle counter */
     pmu_write(1, PMU_CCNT_EN);
 
-    __asm__ volatile ("isb" ::: "memory");
+    __asm__ volatile ("mcr p15, 0, %0, c7, c5, 4" :: "r"(0) : "memory");
 
     g_pmu_enabled = true;
 

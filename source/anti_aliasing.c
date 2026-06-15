@@ -19,6 +19,8 @@
  */
 
 #include "anti_aliasing.h"
+#include "framebuffer.h"
+#include "timing.h"
 
 /*---------------------------------------------------------------------------
  * Quality Presets

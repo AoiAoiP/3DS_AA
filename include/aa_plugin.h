@@ -112,7 +112,7 @@ extern aa_context_t g_aa_ctx;
  * Called by Luma's plugin loader when the game process starts.
  * Must initialize all subsystems and register frame hooks.
  */
-void __attribute__((noreturn)) plugin_main(void);
+void plugin_main(void);
 
 /*---------------------------------------------------------------------------
  * Utility Macros
